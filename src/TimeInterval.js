@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import CelestialStem from './CelestialStem';
 import Element from './Element';
 
@@ -8,7 +7,7 @@ class TimeInterval extends Component {
     return (
       <div>
         <h3>{this.props.title}</h3>
-        <CelestialStem />
+        <CelestialStem timeInterval={this.props.title} />
         <Element />
       </div>
     );

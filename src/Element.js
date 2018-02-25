@@ -13,7 +13,11 @@ class Element extends Component {
       'Yin Metal',
       'Yang Water',
       'Yin Water'
-    ].map((item) => <option>{item}</option>)
+    ].map((item) => (
+      <option key={item.split(' ').map((e) => e.toLowerCase()).join('-')}>
+        {item}
+      </option>
+    ))
 
     return (
       <select>

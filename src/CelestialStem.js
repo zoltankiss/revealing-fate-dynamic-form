@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 class CelestialStem extends Component {
   render() {
-    let stems = [
+    let items = [
       "First Celestial Stem",
       "Second Celestial Stem",
       "Third Celestial Stem",
@@ -14,11 +13,15 @@ class CelestialStem extends Component {
       "Eight Celestial Stem",
       "Ninth Celestial Stem",
       "Tenth Celestial Stem"
-    ].map((stem) => <option>{stem}</option>)
+    ].map((item) => (
+      <option key={this.props.timeInterval+item.split(' ').map((e) => e.toLowerCase()).join('-')}>
+        {item}
+      </option>
+    ))
 
     return (
       <select>
-        {stems}
+        {items}
       </select>
     );
   }
