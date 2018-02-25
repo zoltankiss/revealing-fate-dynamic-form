@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Redirect } from "react-router-dom";
 
 class Usernames extends Component {
   constructor(props) {
     super(props);
     this.loadUsernames();
-    this.state = {usernames: [], redirectToUsername: false};
+    this.state = {usernames: []};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -17,7 +16,7 @@ class Usernames extends Component {
     fetch('http://localhost:3001/api/dynamic_reading_usernames')
       .then(response => response.json())
       .then(data => this.setState({
-        usernames: data.map((item) => <option value={item}>{item}</option>)
+        usernames: data.map((item) => <option key={item} value={item}>{item}</option>)
       }));
   }
 

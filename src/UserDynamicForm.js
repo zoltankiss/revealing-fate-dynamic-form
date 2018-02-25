@@ -6,7 +6,7 @@ const UserDynamicForm = ({ match }) => (
   <div>
     <Usernames username={match.params.username}/>
     <br />
-    <DynamicForm />
+    <DynamicForm username={match.params.username}/>
   </div>
 )
 

@@ -7,8 +7,8 @@ class TimeInterval extends Component {
     return (
       <div>
         <h3>{this.props.title}</h3>
-        <CelestialStem timeInterval={this.props.title} />
-        <Element />
+        <CelestialStem data={this.props.data} timeInterval={this.props.title} username={this.props.username}/>
+        <Element data={this.props.data} timeInterval={this.props.title} username={this.props.username}/>
       </div>
     );
   }
