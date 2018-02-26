@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class CelestialStem extends Component {
+class ElementSelect extends Component {
   constructor(props) {
     super(props);
     this.state = {item: null};
@@ -18,7 +18,7 @@ class CelestialStem extends Component {
       body: JSON.stringify({
         dynamic_reading: {
           username: this.props.username,
-          reading_data: `{"${this.props.timeInterval.toLowerCase()}":{"celestial_stem":"${event.target.value}"}}`
+          reading_data: `{"${this.props.timeInterval.toLowerCase()}":{"${this.props.elementType}":"${event.target.value}"}}`
         }
       })
     })
@@ -29,23 +29,12 @@ class CelestialStem extends Component {
 
     let timeKey = this.props.timeInterval.toLowerCase();
     if(!(timeKey in this.props.data)) return '';
-    if (!('celestial_stem' in this.props.data[timeKey])) return this.props.data[timeKey];
-    return this.props.data[timeKey]['celestial_stem'];
+    if (!(this.props.elementType in this.props.data[timeKey])) return this.props.data[timeKey];
+    return this.props.data[timeKey][this.props.elementType];
   }
 
   render() {
-    let items = [
-      "First Celestial Stem",
-      "Second Celestial Stem",
-      "Third Celestial Stem",
-      "Forth Celestial Stem",
-      "Fifth Celestial Stem",
-      "Sixth Celestial Stem",
-      "Seventh Celestial Stem",
-      "Eight Celestial Stem",
-      "Ninth Celestial Stem",
-      "Tenth Celestial Stem"
-    ].map((item) => (
+    let options = this.props.selectData.map((item) => (
       <option key={this.props.timeInterval+item.split(' ').map((e) => e.toLowerCase()).join('-')}>
         {item}
       </option>
@@ -54,11 +43,11 @@ class CelestialStem extends Component {
     return (
       <div>
         <select value={this.selectValue()} onChange={this.handleChange}>
-          {items}
+          {options}
         </select>
       </div>
     );
   }
 }
 
-export default CelestialStem;
+export default ElementSelect;
