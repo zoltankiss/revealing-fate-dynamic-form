@@ -8,6 +8,7 @@ class ElementSelect extends Component {
   }
 
   handleChange(event) {
+    this.props.onSelectChange(event.target.value);
     this.setState({ item: event.target.value });
     fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`, {
       method: 'PATCH',
@@ -24,7 +25,7 @@ class ElementSelect extends Component {
     })
   }
 
-  selectValue () {
+  selectValue() {
     if(this.state.item) return this.state.item;
 
     let timeKey = this.props.timeInterval.toLowerCase();
@@ -43,6 +44,7 @@ class ElementSelect extends Component {
     return (
       <div>
         <select value={this.selectValue()} onChange={this.handleChange}>
+          <option value=""></option>
           {options}
         </select>
       </div>

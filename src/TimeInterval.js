@@ -2,6 +2,25 @@ import React, { Component } from 'react';
 import ElementSelect from './ElementSelect';
 
 class TimeInterval extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {celestialStem: null};
+    this.handleCelestialStemChange = this.handleCelestialStemChange.bind(this);
+  }
+
+  selectElement(stateElement, elementType) {
+    if(stateElement) return stateElement;
+
+    let timeKey = this.props.title.toLowerCase();
+    if(!(timeKey in this.props.data)) return '';
+    if (!(elementType in this.props.data[timeKey])) return this.props.data[timeKey];
+    return this.props.data[timeKey][elementType];
+  }
+
+  handleCelestialStemChange(celestialStem) {
+    this.setState({celestialStem: celestialStem});
+  }
+
   render() {
     let stems = [
       "First Celestial Stem",
@@ -15,6 +34,19 @@ class TimeInterval extends Component {
       "Ninth Celestial Stem",
       "Tenth Celestial Stem"
     ];
+
+    let stemsToPhases = {
+      "First Celestial Stem": "Yang Wood",
+      "Second Celestial Stem": "Yin Wood",
+      "Third Celestial Stem": "Yang Fire",
+      "Forth Celestial Stem": "Yin Fire",
+      "Fifth Celestial Stem": "Yang Earth",
+      "Sixth Celestial Stem": "Yin Earth",
+      "Seventh Celestial Stem": "Yang Metal",
+      "Eight Celestial Stem": "Yin Metal",
+      "Ninth Celestial Stem": "Yang Water",
+      "Tenth Celestial Stem": "Yin Water"
+    }
 
     let elements = [
       'Yang Wood',
@@ -47,33 +79,16 @@ class TimeInterval extends Component {
     return (
       <div>
         <h3>{this.props.title}</h3>
+
         <ElementSelect
+          onSelectChange={this.handleCelestialStemChange}
           selectData={stems}
           data={this.props.data}
           timeInterval={this.props.title}
           elementType='celestial_stem'
           username={this.props.username}/>
 
-        <ElementSelect
-          selectData={elements}
-          data={this.props.data}
-          timeInterval={this.props.title}
-          elementType='element'
-          username={this.props.username}/>
-
-        <ElementSelect
-          selectData={cardinalDirections}
-          data={this.props.data}
-          timeInterval={this.props.title}
-          elementType='cardinal_direction'
-          username={this.props.username}/>
-
-        <ElementSelect
-          selectData={roles}
-          data={this.props.data}
-          timeInterval={this.props.title}
-          elementType='role'
-          username={this.props.username}/>
+        <span>{stemsToPhases[this.selectElement(this.state.celestialStem, 'celestial_stem')]}</span>
       </div>
     );
   }
