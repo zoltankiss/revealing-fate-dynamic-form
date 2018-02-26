@@ -29,6 +29,21 @@ class TimeInterval extends Component {
       'Yin Water'
     ];
 
+    let cardinalDirections = ['East', 'South', 'Center', 'West', 'North'];
+
+    let roles = [
+      'Peer Assistance 比肩',
+      'Benevolent Plunder 劫財',
+      'Consuming Spirit 食神',
+      'Rebellious Officer 傷官',
+      'Direct Wealth 正財',
+      'Indirect Wealth 偏財',
+      'Just Officer 正官',
+      'Seven Threats 七殺',
+      'Direct Resource 正印',
+      'Indirect Resource 偏印'
+    ];
+
     return (
       <div>
         <h3>{this.props.title}</h3>
@@ -44,6 +59,20 @@ class TimeInterval extends Component {
           data={this.props.data}
           timeInterval={this.props.title}
           elementType='element'
+          username={this.props.username}/>
+
+        <ElementSelect
+          selectData={cardinalDirections}
+          data={this.props.data}
+          timeInterval={this.props.title}
+          elementType='cardinal_direction'
+          username={this.props.username}/>
+
+        <ElementSelect
+          selectData={roles}
+          data={this.props.data}
+          timeInterval={this.props.title}
+          elementType='role'
           username={this.props.username}/>
       </div>
     );
