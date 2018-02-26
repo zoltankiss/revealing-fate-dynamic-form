@@ -18,28 +18,29 @@ class TimeInterval extends Component {
   }
 
   handleCelestialStemChange(celestialStem) {
+    fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dynamic_reading: {
+          username: this.props.username,
+          reading_data: `{"${this.props.title.toLowerCase()}":{"element":"${celestialStem}"}}`
+        }
+      })
+    })
+
     this.setState({celestialStem: celestialStem});
   }
 
-  render() {
-    let stems = [
-      "First Celestial Stem",
-      "Second Celestial Stem",
-      "Third Celestial Stem",
-      "Forth Celestial Stem",
-      "Fifth Celestial Stem",
-      "Sixth Celestial Stem",
-      "Seventh Celestial Stem",
-      "Eight Celestial Stem",
-      "Ninth Celestial Stem",
-      "Tenth Celestial Stem"
-    ];
-
+  phase() {
     let stemsToPhases = {
       "First Celestial Stem": "Yang Wood",
       "Second Celestial Stem": "Yin Wood",
       "Third Celestial Stem": "Yang Fire",
-      "Forth Celestial Stem": "Yin Fire",
+      "Fourth Celestial Stem": "Yin Fire",
       "Fifth Celestial Stem": "Yang Earth",
       "Sixth Celestial Stem": "Yin Earth",
       "Seventh Celestial Stem": "Yang Metal",
@@ -47,6 +48,23 @@ class TimeInterval extends Component {
       "Ninth Celestial Stem": "Yang Water",
       "Tenth Celestial Stem": "Yin Water"
     }
+
+    return stemsToPhases[this.selectElement(this.state.celestialStem, 'celestial_stem')];
+  }
+
+  render() {
+    let stems = [
+      "First Celestial Stem",
+      "Second Celestial Stem",
+      "Third Celestial Stem",
+      "Fourth Celestial Stem",
+      "Fifth Celestial Stem",
+      "Sixth Celestial Stem",
+      "Seventh Celestial Stem",
+      "Eight Celestial Stem",
+      "Ninth Celestial Stem",
+      "Tenth Celestial Stem"
+    ];
 
     let elements = [
       'Yang Wood',
@@ -63,7 +81,7 @@ class TimeInterval extends Component {
 
     let cardinalDirections = ['East', 'South', 'Center', 'West', 'North'];
 
-    let roles = [
+    let tenGods = [
       'Peer Assistance 比肩',
       'Benevolent Plunder 劫財',
       'Consuming Spirit 食神',
@@ -88,7 +106,14 @@ class TimeInterval extends Component {
           elementType='celestial_stem'
           username={this.props.username}/>
 
-        <span>{stemsToPhases[this.selectElement(this.state.celestialStem, 'celestial_stem')]}</span>
+        <span>{this.phase()}</span>
+
+        <ElementSelect
+          selectData={tenGods}
+          data={this.props.data}
+          timeInterval={this.props.title}
+          elementType='god'
+          username={this.props.username}/>
       </div>
     );
   }

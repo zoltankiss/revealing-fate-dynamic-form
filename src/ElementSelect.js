@@ -8,7 +8,7 @@ class ElementSelect extends Component {
   }
 
   handleChange(event) {
-    this.props.onSelectChange(event.target.value);
+    if (this.props.onSelectChange) this.props.onSelectChange(event.target.value);
     this.setState({ item: event.target.value });
     fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`, {
       method: 'PATCH',
