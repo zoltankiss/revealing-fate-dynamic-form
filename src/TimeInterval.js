@@ -24,15 +24,10 @@ class TimeInterval extends Component {
         <h3>{this.props.title}</h3>
 
         <CelestialStemSelect
+          onUpdateDayMaster={this.props.onUpdateDayMaster}
+          dayMaster={this.props.dayMaster}
           data={this.props.data}
           timeInterval={this.props.title}
-          username={this.props.username}/>
-
-        <ElementSelect
-          selectData={tenGods}
-          data={this.props.data}
-          timeInterval={this.props.title}
-          elementType='god'
           username={this.props.username}/>
       </div>
     );
