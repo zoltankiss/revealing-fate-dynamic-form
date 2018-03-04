@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TimeInterval from './TimeInterval';
+import ApiPath from './constants/ApiPath';
 
 class DynamicForm extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class DynamicForm extends Component {
 
   loadData() {
     let vm = this;
-    fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`)
+    fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`)
       .then(response => response.json())
       .then(function (data) {
         vm.setState({ data: data.reading_data });

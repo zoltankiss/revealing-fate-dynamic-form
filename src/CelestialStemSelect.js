@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ElementSelect from './ElementSelect';
+import ApiPath from './constants/ApiPath';
 
 class CelestialStemSelect extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class CelestialStemSelect extends Component {
   }
 
   handleCelestialStemChange(celestialStem) {
-    fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`, {
+    fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`, {
       method: 'PATCH',
       headers: {
         'Accept': 'application/json',

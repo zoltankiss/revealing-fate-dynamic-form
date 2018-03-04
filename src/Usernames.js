@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ApiPath from './constants/ApiPath';
 
 class Usernames extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Usernames extends Component {
   }
 
   loadUsernames() {
-    fetch('http://localhost:3001/api/dynamic_reading_usernames')
+    fetch(`${ApiPath}/api/dynamic_reading_usernames`)
       .then(response => response.json())
       .then(data => this.setState({
         usernames: data.map((item) => <option key={item} value={item}>{item}</option>)

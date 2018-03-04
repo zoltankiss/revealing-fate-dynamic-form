@@ -10,19 +10,6 @@ class ElementSelect extends Component {
   handleChange(event) {
     if (this.props.onSelectChange) this.props.onSelectChange(event.target.value);
     this.setState({ item: event.target.value });
-    fetch(`http://localhost:3001/api/dynamic_readings/${this.props.username}`, {
-      method: 'PATCH',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        dynamic_reading: {
-          username: this.props.username,
-          reading_data: `{"${this.props.timeInterval.toLowerCase()}":{"${this.props.elementType}":"${event.target.value}"}}`
-        }
-      })
-    })
   }
 
   selectValue() {
