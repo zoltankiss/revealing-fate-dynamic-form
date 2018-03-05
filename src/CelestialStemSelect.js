@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ElementSelect from './ElementSelect';
+import DayMasterElementsToGods from './constants/DayMasterElementsToGods';
 import ApiPath from './constants/ApiPath';
 
 class CelestialStemSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {celestialStem: null};
+    this.state = {celestialStem: null, phase: null, god: null};
     this.handleCelestialStemChange = this.handleCelestialStemChange.bind(this);
   }
 
@@ -35,7 +36,38 @@ class CelestialStemSelect extends Component {
     if (this.props.onUpdateDayMaster) {
       this.props.onUpdateDayMaster(this.phase(celestialStem));
     }
-    this.setState({celestialStem: celestialStem});
+
+    let postData = {};
+    let timeInterval = this.props.timeInterval.toLowerCase();
+    postData[timeInterval] = {};
+
+    let phase = this.phase(celestialStem);
+    this.setState({
+      celestialStem: celestialStem,
+      phase: phase
+    });
+    postData[timeInterval]['celestial_stem'] = celestialStem;
+    postData[timeInterval]['phase'] = this.phase(celestialStem);
+
+    if (this.props.dayMaster && celestialStem) {
+      let god = DayMasterElementsToGods[this.props.dayMaster][phase];
+      this.setState({ god: god });
+      postData[timeInterval]['god'] = god;
+    }
+
+    fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        dynamic_reading: {
+          username: this.props.username,
+          reading_data: JSON.stringify(postData)
+        }
+      })
+    })
   }
 
   phase(celestialStem) {
@@ -56,129 +88,6 @@ class CelestialStemSelect extends Component {
   }
 
   render() {
-    let dayMasterElements = {
-      "Yin Fire": {
-        "Yang Metal": "Direct Wealth",
-        "Yang Wood": "Direct Resource",
-        "Yin Earth": "Consuming Spirit",
-        "Yang Water": "Just Officer",
-        "Yin Fire": "Peer Assistance",
-        "Yin Metal": "Indirect Wealth",
-        "Yin Wood": "Indirect Resource",
-        "Yang Earth": "Rebellious Officer",
-        "Yin Water": "Seven Threats",
-        "Yang Fire": "Benevolent Plunder",
-      },
-      "Yang Fire": {
-        "Yin Metal": "Direct Wealth",
-        "Yin Wood": "Direct Resource",
-        "Yang Earth": "Consuming Spirit",
-        "Yin Water": "Just Officer",
-        "Yang Fire": "Peer Assistance",
-        "Yang Metal": "Indirect Wealth",
-        "Yang Wood": "Indirect Resource",
-        "Yin Earth": "Rebellious Officer",
-        "Yang Water": "Seven Threats",
-        "Yin Fire": "Benevolent Plunder",
-      },
-      "Yang Earth": {
-        "Yin Water": "Direct Wealth",
-        "Yin Fire": "Direct Resource",
-        "Yang Metal": "Consuming Spirit",
-        "Yin Wood": "Just Officer",
-        "Yang Earth": "Peer Assistance",
-        "Yang Water": "Indirect Wealth",
-        "Yang Fire": "Indirect Resource",
-        "Yin Metal": "Rebellious Officer",
-        "Yang Wood": "Seven Threats",
-        "Yin Earth": "Benevolent Plunder",
-      },
-      "Yin Earth": {
-        "Yang Water": "Direct Wealth",
-        "Yang Fire": "Direct Resource",
-        "Yin Metal": "Consuming Spirit",
-        "Yang Wood": "Just Officer",
-        "Yin Earth": "Peer Assistance",
-        "Yin Water": "Indirect Wealth",
-        "Yin Fire": "Indirect Resource",
-        "Yang Metal": "Rebellious Officer",
-        "Yin Wood": "Seven Threats",
-        "Yang Earth": "Benevolent Plunder",
-      },
-      "Yang Metal": {
-        "Yin Wood": "Direct Wealth",
-        "Yin Earth": "Direct Resource",
-        "Yang Water": "Consuming Spirit",
-        "Yin Fire": "Just Officer",
-        "Yang Metal": "Peer Assistance",
-        "Yang Wood": "Indirect Wealth",
-        "Yang Earth": "Indirect Resource",
-        "Yin Water": "Rebellious Officer",
-        "Yang Fire": "Seven Threats",
-        "Yin Metal": "Benevolent Plunder",
-      },
-      "Yin Metal": {
-        "Yang Wood": "Direct Wealth",
-        "Yang Earth": "Direct Resource",
-        "Yin Water": "Consuming Spirit",
-        "Yang Fire": "Just Officer",
-        "Yin Metal": "Peer Assistance",
-        "Yin Wood": "Indirect Wealth",
-        "Yin Earth": "Indirect Resource",
-        "Yang Water": "Rebellious Officer",
-        "Yin Fire": "Seven Threats",
-        "Yang Metal": "Benevolent Plunder",
-      },
-      "Yang Water": {
-        "Yin Fire": "Direct Wealth",
-        "Yin Metal": "Direct Resource",
-        "Yang Wood": "Consuming Spirit",
-        "Yin Earth": "Just Officer",
-        "Yang Water": "Peer Assistance",
-        "Yang Fire": "Indirect Wealth",
-        "Yang Metal": "Indirect Resource",
-        "Yin Wood": "Rebellious Officer",
-        "Yang Earth": "Seven Threats",
-        "Yin Water": "Benevolent Plunder",
-      },
-      "Yin Water": {
-        "Yang Fire": "Direct Wealth",
-        "Yang Metal": "Direct Resource",
-        "Yin Wood": "Consuming Spirit",
-        "Yang Earth": "Just Officer",
-        "Yin Water": "Peer Assistance",
-        "Yin Fire": "Indirect Wealth",
-        "Yin Metal": "Indirect Resource",
-        "Yang Wood": "Rebellious Officer",
-        "Yin Earth": "Seven Threats",
-        "Yang Water": "Benevolent Plunder",
-      },
-      "Yang Wood": {
-        "Yin Earth": "Direct Wealth",
-        "Yin Water": "Direct Resource",
-        "Yang Fire": "Consuming Spirit",
-        "Yin Metal": "Just Officer",
-        "Yang Wood": "Peer Assistance",
-        "Yang Earth": "Indirect Wealth",
-        "Yang Water": "Indirect Resource",
-        "Yin Fire": "Rebellious Officer",
-        "Yang Metal": "Seven Threats",
-        "Yin Wood": "Benevolent Plunder",
-      },
-      "Yin Wood": {
-        "Yang Earth": "Direct Wealth",
-        "Yang Water": "Direct Resource",
-        "Yin Fire": "Consuming Spirit",
-        "Yang Metal": "Just Officer",
-        "Yin Wood": "Peer Assistance",
-        "Yin Earth": "Indirect Wealth",
-        "Yin Water": "Indirect Resource",
-        "Yang Fire": "Rebellious Officer",
-        "Yin Metal": "Seven Threats",
-        "Yang Wood": "Benevolent Plunder",
-      }
-    }
-
     let stems = [
       "First Celestial Stem 甲",
       "Second Celestial Stem 乙",
@@ -206,9 +115,7 @@ class CelestialStemSelect extends Component {
     }
 
     let dayMasterMarkup = null;
-    if (this.props.dayMaster && this.state.celestialStem) {
-      dayMasterMarkup = <span>{dayMasterElements[this.props.dayMaster][this.phase(this.state.celestialStem)]}</span>;
-    }
+    if (this.state.god) dayMasterMarkup = <span>{this.state.god}</span>;
 
     return (
       <div>
@@ -220,7 +127,7 @@ class CelestialStemSelect extends Component {
           elementType='celestial_stem'
           username={this.props.username}/>
 
-        <span>{this.phase(this.state.celestialStem)}</span>
+        <span>{this.state.phase}</span>
         <br />
         {dayMasterMarkup}
       </div>
