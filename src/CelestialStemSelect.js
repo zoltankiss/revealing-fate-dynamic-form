@@ -6,7 +6,7 @@ import ApiPath from './constants/ApiPath';
 class CelestialStemSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {celestialStem: null, phase: null, god: null};
+    this.state = {celestialStem: null};
     this.handleCelestialStemChange = this.handleCelestialStemChange.bind(this);
   }
 
@@ -49,11 +49,8 @@ class CelestialStemSelect extends Component {
     postData[timeInterval]['celestial_stem'] = celestialStem;
     postData[timeInterval]['phase'] = this.phase(celestialStem);
 
-    if (this.props.dayMaster && celestialStem) {
-      let god = DayMasterElementsToGods[this.props.dayMaster][phase];
-      this.setState({ god: god });
-      postData[timeInterval]['god'] = god;
-    }
+    let god = this.god(celestialStem);
+    if (god) postData[timeInterval]['god'] = god;
 
     fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`, {
       method: 'PATCH',
@@ -68,6 +65,12 @@ class CelestialStemSelect extends Component {
         }
       })
     })
+  }
+
+  god(celestialStem) {
+    if (!this.props.dayMaster || !celestialStem) return null;
+
+    return DayMasterElementsToGods[this.props.dayMaster][this.phase(celestialStem)];
   }
 
   phase(celestialStem) {
@@ -114,9 +117,6 @@ class CelestialStemSelect extends Component {
       "Tenth Celestial Stem": "癸"
     }
 
-    let dayMasterMarkup = null;
-    if (this.state.god) dayMasterMarkup = <span>{this.state.god}</span>;
-
     return (
       <div>
         <ElementSelect
@@ -127,9 +127,9 @@ class CelestialStemSelect extends Component {
           elementType='celestial_stem'
           username={this.props.username}/>
 
-        <span>{this.state.phase}</span>
+        <span>{this.phase(this.state.celestialStem)}</span>
         <br />
-        {dayMasterMarkup}
+        <span>{this.god(this.state.celestialStem)}</span>
       </div>
     );
   }
