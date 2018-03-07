@@ -6,17 +6,38 @@ import ApiPath from './constants/ApiPath';
 class CelestialStemSelect extends Component {
   constructor(props) {
     super(props);
-    this.state = {celestialStem: null};
+    this.state = {celestialStem: null, dayMasterDefault: null};
     this.handleCelestialStemChange = this.handleCelestialStemChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data && nextProps.data[this.props.timeInterval.toLowerCase()] && nextProps.data[this.props.timeInterval.toLowerCase()]['celestial_stem']) {
+      this.setState({ celestialStem: nextProps.data[this.props.timeInterval.toLowerCase()]['celestial_stem'] });
+    }
+    if (nextProps.data && nextProps.data['day_master']) {
+      this.setState({ dayMasterDefault: nextProps.data['day_master'] });
+    }
+  }
+
+  dayMaster() {
+    return this.props.dayMaster || this.state.dayMasterDefault;
   }
 
   selectElement(stateElement, elementType) {
     if(stateElement) return stateElement;
+    let data = this.selfData();
+    if (!data) return '';
+    if (!(elementType in data)) return data;
+    return data[elementType];
+  }
 
-    let timeKey = this.props.timeInterval.toLowerCase();
-    if(!(timeKey in this.props.data)) return '';
-    if (!(elementType in this.props.data[timeKey])) return this.props.data[timeKey];
-    return this.props.data[timeKey][elementType];
+  timeKey() {
+    return this.props.timeInterval.toLowerCase();
+  }
+
+  selfData() {
+    if(!(this.timeKey() in this.props.data)) return null;
+    return this.props.data[this.timeKey()];
   }
 
   handleCelestialStemChange(celestialStem) {
@@ -38,16 +59,16 @@ class CelestialStemSelect extends Component {
     }
 
     let postData = {};
-    let timeInterval = this.props.timeInterval.toLowerCase();
+    let timeInterval = this.timeKey();
     postData[timeInterval] = {};
 
     let phase = this.phase(celestialStem);
-    this.setState({
-      celestialStem: celestialStem,
-      phase: phase
-    });
+    this.setState({ celestialStem: celestialStem });
     postData[timeInterval]['celestial_stem'] = celestialStem;
     postData[timeInterval]['phase'] = this.phase(celestialStem);
+    if (timeInterval == 'day') {
+      postData['day_master'] = this.phase(celestialStem);
+    }
 
     let god = this.god(celestialStem);
     if (god) postData[timeInterval]['god'] = god;
@@ -67,10 +88,18 @@ class CelestialStemSelect extends Component {
     })
   }
 
-  god(celestialStem) {
-    if (!this.props.dayMaster || !celestialStem) return null;
+  displayedGod() {
+    return this.god(this.state.celestialStem);
+  }
 
-    return DayMasterElementsToGods[this.props.dayMaster][this.phase(celestialStem)];
+  displayedPhase() {
+    return this.phase(this.state.celestialStem);
+  }
+
+  god(celestialStem) {
+    if (!this.dayMaster() || !celestialStem) return null;
+
+    return DayMasterElementsToGods[this.dayMaster()][this.phase(celestialStem)];
   }
 
   phase(celestialStem) {
@@ -117,6 +146,19 @@ class CelestialStemSelect extends Component {
       "Tenth Celestial Stem": "癸"
     }
 
+    let display = null;
+    if (this.props.timeInterval != 'Day') {
+      display = (
+        <div>
+          <span>{this.displayedPhase()}</span>
+          <br />
+          <span>{this.displayedGod()}</span>
+        </div>
+      )
+    } else {
+      display = null;
+    }
+
     return (
       <div>
         <ElementSelect
@@ -127,9 +169,7 @@ class CelestialStemSelect extends Component {
           elementType='celestial_stem'
           username={this.props.username}/>
 
-        <span>{this.phase(this.state.celestialStem)}</span>
-        <br />
-        <span>{this.god(this.state.celestialStem)}</span>
+        {display}
       </div>
     );
   }

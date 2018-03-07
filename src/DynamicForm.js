@@ -33,10 +33,14 @@ class DynamicForm extends Component {
     let data = this.state.data;
 
     let dayMasterElement = null;
+    let dayMaster = data.day_master;
     if (this.state.dayMaster) {
+      dayMaster = this.state.dayMaster;
+    }
+    if (dayMaster) {
       dayMasterElement = (
         <div>
-          <h2><b>Day Master:</b> {this.state.dayMaster}</h2>
+          <h2><b>Day Master:</b> {dayMaster}</h2>
           <br />
         </div>
       );
