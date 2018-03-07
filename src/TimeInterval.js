@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ElementSelect from './ElementSelect';
-import CelestialStemSelect from './CelestialStemSelect';
+import ObjectWithPhase from './ObjectWithPhase';
 
 class TimeInterval extends Component {
   render() {
@@ -23,7 +23,8 @@ class TimeInterval extends Component {
       <div>
         <h3>{this.props.title}</h3>
 
-        <CelestialStemSelect
+        <ObjectWithPhase
+          objectName='celestial_stem'
           onUpdateDayMaster={this.props.onUpdateDayMaster}
           dayMaster={this.props.dayMaster}
           data={this.props.data}

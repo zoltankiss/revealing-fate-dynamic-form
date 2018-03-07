@@ -3,16 +3,16 @@ import ElementSelect from './ElementSelect';
 import DayMasterElementsToGods from './constants/DayMasterElementsToGods';
 import ApiPath from './constants/ApiPath';
 
-class CelestialStemSelect extends Component {
+class ObjectWithPhase extends Component {
   constructor(props) {
     super(props);
-    this.state = {celestialStem: null, dayMasterDefault: null};
-    this.handleCelestialStemChange = this.handleCelestialStemChange.bind(this);
+    this.state = {objectWithPhase: null, dayMasterDefault: null};
+    this.handleObjectWithPhaseChange = this.handleObjectWithPhaseChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.data && nextProps.data[this.props.timeInterval.toLowerCase()] && nextProps.data[this.props.timeInterval.toLowerCase()]['celestial_stem']) {
-      this.setState({ celestialStem: nextProps.data[this.props.timeInterval.toLowerCase()]['celestial_stem'] });
+    if (nextProps.data && nextProps.data[this.props.timeInterval.toLowerCase()] && nextProps.data[this.props.timeInterval.toLowerCase()][this.props.objectName]) {
+      this.setState({ objectWithPhase: nextProps.data[this.props.timeInterval.toLowerCase()][this.props.objectName] });
     }
     if (nextProps.data && nextProps.data['day_master']) {
       this.setState({ dayMasterDefault: nextProps.data['day_master'] });
@@ -40,7 +40,7 @@ class CelestialStemSelect extends Component {
     return this.props.data[this.timeKey()];
   }
 
-  handleCelestialStemChange(celestialStem) {
+  handleObjectWithPhaseChange(objectWithPhase) {
     fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`, {
       method: 'PATCH',
       headers: {
@@ -50,27 +50,27 @@ class CelestialStemSelect extends Component {
       body: JSON.stringify({
         dynamic_reading: {
           username: this.props.username,
-          reading_data: `{"${this.props.timeInterval.toLowerCase()}":{"element":"${this.phase(celestialStem)}"}}`
+          reading_data: `{"${this.props.timeInterval.toLowerCase()}":{"element":"${this.phase(objectWithPhase)}"}}`
         }
       })
     })
     if (this.props.onUpdateDayMaster) {
-      this.props.onUpdateDayMaster(this.phase(celestialStem));
+      this.props.onUpdateDayMaster(this.phase(objectWithPhase));
     }
 
     let postData = {};
     let timeInterval = this.timeKey();
     postData[timeInterval] = {};
 
-    let phase = this.phase(celestialStem);
-    this.setState({ celestialStem: celestialStem });
-    postData[timeInterval]['celestial_stem'] = celestialStem;
-    postData[timeInterval]['phase'] = this.phase(celestialStem);
+    let phase = this.phase(objectWithPhase);
+    this.setState({ objectWithPhase: objectWithPhase });
+    postData[timeInterval][this.props.objectName] = objectWithPhase;
+    postData[timeInterval]['phase'] = this.phase(objectWithPhase);
     if (timeInterval == 'day') {
-      postData['day_master'] = this.phase(celestialStem);
+      postData['day_master'] = this.phase(objectWithPhase);
     }
 
-    let god = this.god(celestialStem);
+    let god = this.god(objectWithPhase);
     if (god) postData[timeInterval]['god'] = god;
 
     fetch(`${ApiPath}/api/dynamic_readings/${this.props.username}`, {
@@ -89,20 +89,20 @@ class CelestialStemSelect extends Component {
   }
 
   displayedGod() {
-    return this.god(this.state.celestialStem);
+    return this.god(this.state.objectWithPhase);
   }
 
   displayedPhase() {
-    return this.phase(this.state.celestialStem);
+    return this.phase(this.state.objectWithPhase);
   }
 
-  god(celestialStem) {
-    if (!this.dayMaster() || !celestialStem) return null;
+  god(objectWithPhase) {
+    if (!this.dayMaster() || !objectWithPhase) return null;
 
-    return DayMasterElementsToGods[this.dayMaster()][this.phase(celestialStem)];
+    return DayMasterElementsToGods[this.dayMaster()][this.phase(objectWithPhase)];
   }
 
-  phase(celestialStem) {
+  phase(objectWithPhase) {
     let stemsToPhases = {
       "First Celestial Stem 甲": "Yang Wood",
       "Second Celestial Stem 乙": "Yin Wood",
@@ -116,7 +116,7 @@ class CelestialStemSelect extends Component {
       "Tenth Celestial Stem 癸": "Yin Water"
     }
 
-    return stemsToPhases[this.selectElement(celestialStem, 'celestial_stem')];
+    return stemsToPhases[this.selectElement(objectWithPhase, this.props.objectName)];
   }
 
   render() {
@@ -162,11 +162,11 @@ class CelestialStemSelect extends Component {
     return (
       <div>
         <ElementSelect
-          onSelectChange={this.handleCelestialStemChange}
+          onSelectChange={this.handleObjectWithPhaseChange}
           selectData={stems}
           data={this.props.data}
           timeInterval={this.props.timeInterval}
-          elementType='celestial_stem'
+          elementType={this.props.objectName}
           username={this.props.username}/>
 
         {display}
@@ -175,4 +175,4 @@ class CelestialStemSelect extends Component {
   }
 }
 
-export default CelestialStemSelect;
+export default ObjectWithPhase;
