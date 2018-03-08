@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import EnglishToChineseMapping from './constants/EnglishToChineseMapping';
 
 class ElementSelect extends Component {
   constructor(props) {
@@ -23,8 +24,8 @@ class ElementSelect extends Component {
 
   render() {
     let options = this.props.selectData.map((item) => (
-      <option key={this.props.timeInterval+item.split(' ').map((e) => e.toLowerCase()).join('-')}>
-        {item}
+      <option value={item} key={this.props.timeInterval+item.split(' ').map((e) => e.toLowerCase()).join('-')}>
+        {item} {EnglishToChineseMapping[item]}
       </option>
     ))
 

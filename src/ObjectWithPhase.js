@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ElementSelect from './ElementSelect';
 import DayMasterElementsToGods from './constants/DayMasterElementsToGods';
+import EnglishToChineseMapping from './constants/EnglishToChineseMapping';
 import ApiPath from './constants/ApiPath';
 
 class ObjectWithPhase extends Component {
@@ -104,16 +105,16 @@ class ObjectWithPhase extends Component {
 
   phase(objectWithPhase) {
     let stemsToPhases = {
-      "First Celestial Stem 甲": "Yang Wood",
-      "Second Celestial Stem 乙": "Yin Wood",
-      "Third Celestial Stem 丙": "Yang Fire",
-      "Fourth Celestial Stem 丁": "Yin Fire",
-      "Fifth Celestial Stem 戊": "Yang Earth",
-      "Sixth Celestial Stem 己": "Yin Earth",
-      "Seventh Celestial Stem 庚": "Yang Metal",
-      "Eight Celestial Stem 辛": "Yin Metal",
-      "Ninth Celestial Stem 壬": "Yang Water",
-      "Tenth Celestial Stem 癸": "Yin Water"
+      "First Celestial Stem": "Yang Wood",
+      "Second Celestial Stem": "Yin Wood",
+      "Third Celestial Stem": "Yang Fire",
+      "Fourth Celestial Stem": "Yin Fire",
+      "Fifth Celestial Stem": "Yang Earth",
+      "Sixth Celestial Stem": "Yin Earth",
+      "Seventh Celestial Stem": "Yang Metal",
+      "Eight Celestial Stem": "Yin Metal",
+      "Ninth Celestial Stem": "Yang Water",
+      "Tenth Celestial Stem": "Yin Water"
     }
 
     return stemsToPhases[this.selectElement(objectWithPhase, this.props.objectName)];
@@ -121,38 +122,27 @@ class ObjectWithPhase extends Component {
 
   render() {
     let stems = [
-      "First Celestial Stem 甲",
-      "Second Celestial Stem 乙",
-      "Third Celestial Stem 丙",
-      "Fourth Celestial Stem 丁",
-      "Fifth Celestial Stem 戊",
-      "Sixth Celestial Stem 己",
-      "Seventh Celestial Stem 庚",
-      "Eight Celestial Stem 辛",
-      "Ninth Celestial Stem 壬",
-      "Tenth Celestial Stem 癸"
+      "First Celestial Stem",
+      "Second Celestial Stem",
+      "Third Celestial Stem",
+      "Fourth Celestial Stem",
+      "Fifth Celestial Stem",
+      "Sixth Celestial Stem",
+      "Seventh Celestial Stem",
+      "Eight Celestial Stem",
+      "Ninth Celestial Stem",
+      "Tenth Celestial Stem"
     ];
-
-    let stemChineseChars = {
-      "First Celestial Stem": "甲",
-      "Second Celestial Stem": "乙",
-      "Third Celestial Stem": "丙",
-      "Fourth Celestial Stem": "丁",
-      "Fifth Celestial Stem": "戊",
-      "Sixth Celestial Stem": "己",
-      "Seventh Celestial Stem": "庚",
-      "Eight Celestial Stem": "辛",
-      "Ninth Celestial Stem": "壬",
-      "Tenth Celestial Stem": "癸"
-    }
 
     let display = null;
     if (this.props.timeInterval != 'Day') {
+      let phase = this.displayedPhase();
+      let god = this.displayedGod();
       display = (
         <div>
-          <span>{this.displayedPhase()}</span>
+          <span>{phase} {EnglishToChineseMapping[phase]}</span>
           <br />
-          <span>{this.displayedGod()}</span>
+          <span>{god} {EnglishToChineseMapping[god]}</span>
         </div>
       )
     } else {
