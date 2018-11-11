@@ -1,3 +1,3 @@
-const ApiPath = "http://localhost:3004";
+const ApiPath = "http://revealingfate.com";
 
 export default ApiPath;
